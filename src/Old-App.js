@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 //If there is no default export, then you need the braces. here we also extract the Router etc from 
 //BrowserRouter. Else we would have to write: BrowserRouter.Router etc.
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -11,27 +11,46 @@ import About from "./components/pages/About";
 import axios from 'axios';
 import './App.css';
 
-const App = () => {
+class App extends Component {
   //declaring state
-  const [users, setUsers] = useState([]);
-  const [repos, setRepos] = useState([]);
-  const [user, setUser] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState(null);
+  state = {
+    users: [],
+    repos: [],
+    user: {},
+    loading: false,
+    alert: null
+  }
+
+  // async componentDidMount() {
+  //   this.setState({
+  //     loading: true
+  //   })
+
+  //   const response = await axios.get(`https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+
+  //   this.setState({
+  //     loading: false,
+  //     users: response.data
+  //   })
+  // }
 
   //Search for a user
-  const searchUsers = async (text) => {
-    setLoading(true);
+  searchUsers = async (text) => {
+    this.setState({
+      loading: true
+    })
 
     const response = await axios.get(`https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
 
-    setUsers(response.data.items);
-    setLoading(false);
+    this.setState({
+      loading: false,
+      users: response.data.items
+    })
   }
 
   ///Get single Github User 
-  const getUser = async username => {
-    setLoading(true);
+  getUser = async username => {
+    this.setState({ loading: true });
 
     const res = await axios.get(
       `http://api.github.com/users/${username}?client_id=${
@@ -40,12 +59,11 @@ const App = () => {
       }&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
 
-    setUser(res.data);
-    setLoading(false);
+    this.setState({ user: res.data, loading: false})
   }
 
-  const getUserRepos = async username => {
-    setLoading(true);
+  getUserRepos = async username => {
+    this.setState({ loading: true });
 
     const res = await axios.get(
       `http://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${
@@ -53,34 +71,41 @@ const App = () => {
       }&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
 
-    setRepos(res.data);
-    setLoading(false);
+    this.setState({ repos: res.data, loading: false})
   }
 
-  const clearUsers = () => {
-    setUsers([])
+  clearUsers = () => {
+    this.setState({
+      users: []
+    })
   }
 
-  const showAlert = (message, type) => {
-    setAlert(message, type);
-    setTimeout(() => setAlert(null), 2000);
+  setAlert = (message, type) => {
+    this.setState({
+      alert: {message, type}
+    })
+    setTimeout(() => this.setState({alert: null}), 2000)
   }
+
+  render() {
+    //Destructuring!
+    const { users, user, repos, loading} = this.state; 
 
     return (
       <Router>
         <div className="App">
           <Navbar />
           <div className="container">
-            <Alert alert={alert} />
+            <Alert alert={this.state.alert} />
             <Switch>
 
               <Route exact path='/' render={props => (
                 <Fragment>
                   <Search
-                    searchUsers={searchUsers}
-                    clearUsers={clearUsers}
+                    searchUsers={this.searchUsers}
+                    clearUsers={this.clearUsers}
                     showClear={users.length > 0 ? true : false}
-                    setAlert={showAlert}
+                    setAlert={this.setAlert}
                   />
                   <Users loading={loading} users={users} />
                 </Fragment>
@@ -93,8 +118,8 @@ const App = () => {
                 // in this case we later need the login in the user component to fetch the users infos. We get login form the UserItem component.
                 <User 
                   {...props} 
-                  getUser={getUser} 
-                  getUserRepos={getUserRepos} 
+                  getUser={this.getUser} 
+                  getUserRepos={this.getUserRepos} 
                   user={user} 
                   repos={repos}
                   loading={loading}
@@ -106,6 +131,7 @@ const App = () => {
         </div>
       </Router>
     )
+  }
 }
 
 export default App;
