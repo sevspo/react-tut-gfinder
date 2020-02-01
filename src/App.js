@@ -62,8 +62,10 @@ const App = () => {
   }
 
   const showAlert = (message, type) => {
-    setAlert(message, type);
-    setTimeout(() => setAlert(null), 2000);
+    // be careful here: you have to use curly braces in here.
+    // But is that destructing or "consructing" an object? ==> it is the later
+    setAlert({ message, type });
+    setTimeout(() => setAlert(null), 4000);
   }
 
     return (
@@ -80,7 +82,7 @@ const App = () => {
                     searchUsers={searchUsers}
                     clearUsers={clearUsers}
                     showClear={users.length > 0 ? true : false}
-                    setAlert={showAlert}
+                    showAlert={showAlert}
                   />
                   <Users loading={loading} users={users} />
                 </Fragment>
