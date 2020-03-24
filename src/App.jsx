@@ -11,6 +11,8 @@ import About from "./components/pages/About";
 import axios from "axios";
 import "./App.css";
 
+import GithubState from './context/github/GithubState';
+
 const App = () => {
   //declaring state
   const [users, setUsers] = useState([]);
@@ -69,50 +71,52 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        <div className="container">
-          <Alert alert={alert} />
-          <Switch>
-            <Route
-              exact
-              path="/"
-              render={props => (
-                <Fragment>
-                  <Search
-                    searchUsers={searchUsers}
-                    clearUsers={clearUsers}
-                    showClear={users.length > 0 ? true : false}
-                    showAlert={showAlert}
+    <GithubState>
+      <Router>
+        <div className="App">
+          <Navbar />
+          <div className="container">
+            <Alert alert={alert} />
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={props => (
+                  <Fragment>
+                    <Search
+                      searchUsers={searchUsers}
+                      clearUsers={clearUsers}
+                      showClear={users.length > 0 ? true : false}
+                      showAlert={showAlert}
+                    />
+                    <Users loading={loading} users={users} />
+                  </Fragment>
+                )}
+              />
+
+              <Route exact path="/about" component={About} />
+
+              <Route
+                exact
+                path="/user/:login"
+                render={props => (
+                  // if you need to pass routing information to a child, then we need to use render attribute.
+                  // in this case we later need the login in the user component to fetch the users infos. We get login form the UserItem component.
+                  <User
+                    {...props}
+                    getUser={getUser}
+                    getUserRepos={getUserRepos}
+                    user={user}
+                    repos={repos}
+                    loading={loading}
                   />
-                  <Users loading={loading} users={users} />
-                </Fragment>
-              )}
-            />
-
-            <Route exact path="/about" component={About} />
-
-            <Route
-              exact
-              path="/user/:login"
-              render={props => (
-                // if you need to pass routing information to a child, then we need to use render attribute.
-                // in this case we later need the login in the user component to fetch the users infos. We get login form the UserItem component.
-                <User
-                  {...props}
-                  getUser={getUser}
-                  getUserRepos={getUserRepos}
-                  user={user}
-                  repos={repos}
-                  loading={loading}
-                />
-              )}
-            />
-          </Switch>
+                )}
+              />
+            </Switch>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </GithubState>
   );
 };
 
