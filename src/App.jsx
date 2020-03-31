@@ -1,15 +1,15 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment } from 'react';
 //If there is no default export, then you need the braces. here we also extract the Router etc from
 //BrowserRouter. Else we would have to write: BrowserRouter.Router etc.
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Navbar from "./components/layout/Navbar";
-import Users from "./components/users/Users";
-import User from "./components/users/User";
-import Search from "./components/users/Search";
-import Alert from "./components/layout/Alert";
-import About from "./components/pages/About";
-import axios from "axios";
-import "./App.css";
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Navbar from './components/layout/Navbar';
+import Users from './components/users/Users';
+import User from './components/users/User';
+import Search from './components/users/Search';
+import Alert from './components/layout/Alert';
+import About from './components/pages/About';
+import axios from 'axios';
+import './App.css';
 
 import GithubState from './context/github/GithubState';
 
@@ -84,12 +84,11 @@ const App = () => {
                 render={props => (
                   <Fragment>
                     <Search
-                      searchUsers={searchUsers}
                       clearUsers={clearUsers}
                       showClear={users.length > 0 ? true : false}
                       showAlert={showAlert}
                     />
-                    <Users loading={loading} users={users} />
+                    <Users />
                   </Fragment>
                 )}
               />
