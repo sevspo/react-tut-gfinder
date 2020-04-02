@@ -46,16 +46,16 @@ const GithubState = props => {
         process.env.REACT_APP_GITHUB_CLIENT_ID
       }&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
-    
+
     // ALL these methods end with a dispatch
     dispatch({
       type: GET_USER,
       payload: res.data
-    })
+    });
   };
 
   // Get Repos
-    const getUserRepos = async username => {
+  const getUserRepos = async username => {
     setLoading();
 
     const res = await axios.get(
@@ -67,7 +67,7 @@ const GithubState = props => {
     dispatch({
       type: GET_REPOS,
       payload: res.data
-    })
+    });
   };
 
   // Clear Users
@@ -86,7 +86,7 @@ const GithubState = props => {
         searchUsers,
         clearUsers,
         getUser,
-        getUserRepos,
+        getUserRepos
       }}
     >
       {props.children}
