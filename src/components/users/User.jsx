@@ -1,17 +1,23 @@
-import React, { Fragment, useEffect } from 'react';
-import Spinner from '../layout/Spinner';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import Repos from '../repos/Repos';
+import React, { Fragment, useEffect, useContext } from "react";
+import Spinner from "../layout/Spinner";
+//import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import Repos from "../repos/Repos";
+import GithubContext from "../../context/github/githubContext";
 
-const User = ({ user, getUser, getUserRepos, loading, repos, match }) => {
+
+const User = ({  match }) => {
   //this lifecycle event calls the get user function an posses in the name it gets form the render prop of the routing in App.
-
   useEffect(() => {
+    /// funny that this still works, since we do not pass anything in anymore
     getUser(match.params.login);
     getUserRepos(match.params.login);
     // eslint-disable-next-line
   }, []);
+
+  const githubContext = useContext(GithubContext);
+  /// here some destructing
+  const { user, getUser, loading, getUserRepos, repos, } = githubContext;
 
   const {
     name,
@@ -36,7 +42,7 @@ const User = ({ user, getUser, getUserRepos, loading, repos, match }) => {
       <Link to="/" className="btn btn-light">
         Back to Search
       </Link>
-      Hireable:{' '}
+      Hireable:{" "}
       {hireable ? (
         <i className="fas fa-check text-success" />
       ) : (
@@ -47,7 +53,7 @@ const User = ({ user, getUser, getUserRepos, loading, repos, match }) => {
           <img
             src={avatar_url}
             alt={name}
-            style={{ width: '150px' }}
+            style={{ width: "150px" }}
             className="round-img"
           />
           <h1>{name}</h1>
@@ -99,12 +105,12 @@ const User = ({ user, getUser, getUserRepos, loading, repos, match }) => {
   );
 };
 
-User.propTypes = {
-  loading: PropTypes.bool,
-  user: PropTypes.object.isRequired,
-  getUser: PropTypes.func.isRequired,
-  repos: PropTypes.array.isRequired,
-  getUserRepos: PropTypes.func.isRequired
-};
+// User.propTypes = {
+//   loading: PropTypes.bool,
+//   user: PropTypes.object.isRequired,
+//   getUser: PropTypes.func.isRequired,
+//   repos: PropTypes.array.isRequired,
+//   getUserRepos: PropTypes.func.isRequired
+// };
 
 export default User;
