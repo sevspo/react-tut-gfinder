@@ -3,11 +3,11 @@ import React, { useState, Fragment } from "react";
 //BrowserRouter. Else we would have to write: BrowserRouter.Router etc.
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
-import Users from "./components/users/Users";
+import Home from "./components/pages/home";
 import User from "./components/users/User";
-import Search from "./components/users/Search";
 import Alert from "./components/layout/Alert";
 import About from "./components/pages/About";
+import NotFound from "./components/pages/NotFound";
 import axios from "axios";
 import "./App.css";
 
@@ -28,19 +28,8 @@ const App = () => {
             <div className="container">
               <Alert />
               <Switch>
-                <Route
-                  exact
-                  path="/"
-                  render={props => (
-                    <Fragment>
-                      <Search />
-                      <Users />
-                    </Fragment>
-                  )}
-                />
-
+                <Route exact path="/" component={Home} />
                 <Route exact path="/about" component={About} />
-
                 <Route
                   exact
                   path="/user/:login"
@@ -51,6 +40,7 @@ const App = () => {
                   // )}
                   component={User}
                 />
+                <Route component={NotFound} />
               </Switch>
             </div>
           </div>
